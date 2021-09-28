@@ -1,6 +1,5 @@
 import asyncio
 import sys
-from aioconsole import ainput
 
 
 class Server:
