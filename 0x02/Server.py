@@ -1,5 +1,9 @@
 import asyncio
 import sys
+import logging
+import pathlib
+import os
+from datetime import datetime
 
 
 class Server:
@@ -16,8 +20,9 @@ class Server:
         self.__ip: str = ip
         self.__port: int = port
         self.__loop: asyncio.AbstractEventLoop = loop
+        self.__logger: logging.Logger = self.initialize_logger()
 
-        print(f"Server Initialized with {self.ip}:{self.port}")
+        self.logger.info(f"Server Initialized with {self.ip}:{self.port}")
 
     @property
     def ip(self):
@@ -31,6 +36,43 @@ class Server:
     def loop(self):
         return self.__loop
 
+    @property
+    def logger(self):
+        return self.__logger
+
+    def initialize_logger(self):
+        '''
+        Initializes a logger and generates a log file in ./logs.
+        Returns
+        -------
+        logging.Logger
+            Used for writing logs of varying levels to the console and log file.
+        -------
+        '''
+        path = pathlib.Path(os.path.join(os.getcwd(), "logs"))
+        path.mkdir(parents=True, exist_ok=True)
+
+        logger = logging.getLogger('Server')
+        logger.setLevel(logging.DEBUG)
+
+        ch = logging.StreamHandler()
+        fh = logging.FileHandler(
+            filename=f'logs/{datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}_server.log'
+        )
+        ch.setLevel(logging.INFO)
+        fh.setLevel(logging.DEBUG)
+
+        formatter = logging.Formatter(
+            '[%(asctime)s] - %(levelname)s - %(message)s'
+        )
+
+        ch.setFormatter(formatter)
+        fh.setFormatter(formatter)
+        logger.addHandler(ch)
+        logger.addHandler(fh)
+
+        return logger
+
     def start_server(self):
         '''
         Starts the server on IP and PORT.
@@ -42,9 +84,9 @@ class Server:
             self.loop.run_until_complete(self.server)
             self.loop.run_forever()
         except Exception as e:
-            print(e)
+            self.logger.error(e)
         except KeyboardInterrupt:
-            print("Keyboard Interrupt Detected. Shutting down!")
+            self.logger.warning("Keyboard Interrupt Detected. Shutting down!")
 
     def accept_client(self, client_reader: asyncio.StreamReader, client_writer: asyncio.StreamWriter):
         '''
@@ -61,7 +103,7 @@ class Server:
         task = asyncio.Task(self.handle_client(client_reader, client_writer))
         client_ip = client_writer.get_extra_info('peername')[0]
         client_port = client_writer.get_extra_info('peername')[1]
-        print(f"New Connection: {client_ip}:{client_port}")
+        self.logger.info(f"New Connection: {client_ip}:{client_port}")
 
     async def handle_client(self, client_reader: asyncio.StreamReader, client_writer: asyncio.StreamWriter):
         '''
@@ -81,11 +123,11 @@ class Server:
             if client_message.startswith("quit"):
                 break
 
-            print(f"{client_message}")
+            self.logger.info(f"{client_message}")
 
             await client_writer.drain()
 
-        print("Client Disconnected!")
+        self.logger.info("Client Disconnected!")
 
 
 if __name__ == '__main__':
