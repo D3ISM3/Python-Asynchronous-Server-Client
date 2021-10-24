@@ -1,0 +1,9 @@
+[2021-10-24 17:33:04,850] - INFO - Server Initialized with 127.0.0.1:55556
+[2021-10-24 17:33:13,941] - INFO - New Connection: 127.0.0.1:54359
+[2021-10-24 17:33:23,839] - INFO - New Connection: 127.0.0.1:54361
+[2021-10-24 17:33:25,311] - INFO - 
+[2021-10-24 17:33:25,311] - INFO - 
+[2021-10-24 17:33:25,312] - INFO - End Connection
+[2021-10-24 17:33:28,131] - INFO - New Connection: 127.0.0.1:54362
+[2021-10-24 17:33:32,162] - WARNING - Keyboard Interrupt Detected. Shutting down!
+[2021-10-24 17:33:32,163] - INFO - Shutting down server!
