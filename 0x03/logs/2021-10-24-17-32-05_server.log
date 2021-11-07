@@ -1,3 +1,0 @@
-[2021-10-24 17:32:05,680] - INFO - Server Initialized with 127.0.0.1:55555
-[2021-10-24 17:32:05,680] - ERROR - [Errno 48] error while attempting to bind on address ('127.0.0.1', 55555): address already in use
-[2021-10-24 17:32:05,680] - INFO - Shutting down server!
