@@ -3,7 +3,7 @@ import sys
 import logging
 import pathlib
 import os
-from Client import Client
+from ClientModel import Client
 from datetime import datetime
 
 
@@ -111,7 +111,7 @@ class Server:
         ----------
         '''
         client = Client(client_reader, client_writer)
-        task = asyncio.Task(self.handle_client(client))
+        task = asyncio.Task(self.incoming_client_message_cb(client))
         self.clients[task] = client
 
         client_ip = client_writer.get_extra_info('peername')[0]
@@ -120,9 +120,9 @@ class Server:
 
         task.add_done_callback(self.disconnect_client)
 
-    async def handle_client(self, client: Client):
+    async def incoming_client_message_cb(self, client: Client):
         '''
-        Handles incoming messages from client
+        Callback for handling incoming messages from client
 
         Parameters
         ----------
