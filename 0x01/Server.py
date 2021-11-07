@@ -11,6 +11,8 @@ class Server:
             IP that the server will be using
         port : int
             Port that the server will be using
+        loop : asyncio.AbstractEventLoop
+            Asyncio's running event loop from asyncio.get_event_loop()
         ----------
         '''
         self.__ip: str = ip
